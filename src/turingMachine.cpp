@@ -19,11 +19,11 @@ void vectorToSet(std::vector<std::string> &initialVector, std::set<std::string> 
 void storeLine(std::string &line, std::vector<std::string> &words, std::set<std::string> &setToStore) {
     getWords(line, words); // Leemos el alfabeto de entrada de la cadena
     vectorToSet(words, setToStore);
-    words.clear();
 }  
 
 // Función auxiliar para dividir una cadena por los espacios
 void getWords(std::string initialString, std::vector<std::string> &words) {
+  words.clear();
   std::istringstream ourString(initialString);
   do {
     std::string word;
@@ -44,18 +44,22 @@ TuringMachine::TuringMachine(char* turingFile) {
     while (getline(file, line)) {   // Eliminamos los comentarios
       if (line[0] != '#') break;
     }
-    getWords(line, words);
-    words.clear();
-    // INTRODUCIR LOS ESTADOS CUANDO HAGA LA CLASE --------------------------------------------------
+    for (size_t i = 0; i < words.size(); i++) { // Leemos el cjto de estados
+      allStates.push_back(*(new State(words[i])));
+    }
     getline(file, line);  // Alfabeto de la máquina
     storeLine(line, words, turingAlphabet);
     getline(file, line);  // Alfabeto de la cinta
     storeLine(line, words, tapeAlphabet);
     getline(file, line);  // Estado inicial
+    initialState = line;
     getline(file, line); // símbolo blanco
     whiteSymbol = line[0];
     getline(file, line); // Cjto de estados finales
-
+    getWords(line, words);
+    for (size_t i = 0; i < words.size(); i++) 
+      finalStates.push_back(words[i]);
+    
     // TRANSICIONES -----------------------
 
   } else {
@@ -69,13 +73,19 @@ TuringMachine::~TuringMachine() {}
 
 
 std::ostream& TuringMachine::write (std::ostream& os) {
-  os << " - - - TURING MACHINE - - -\n";
-  os << "Alfabeto de entrada: ";
+  os << " - - - TURING MACHINE - - -\n ·Cjto de estados: ";
+  for (size_t i = 0; i < allStates.size(); i++)
+    os << allStates[i].getID() << " ";
+  os << "\n ·Alfabeto de entrada: ";
   for (std::set<std::string>::iterator it = turingAlphabet.begin(); it != turingAlphabet.end(); it++)
     os << *it << " ";
-  os << "\nAlfabeto de la cinta: ";
+  os << "\n ·Alfabeto de la cinta: ";
   for (std::set<std::string>::iterator it = tapeAlphabet.begin(); it != tapeAlphabet.end(); it++)
     os << *it << " ";
+  os << "\n ·Estado inicial: " << initialState << "\n ·Estados finales: ";
+  for (std::vector<std::string>::iterator it = finalStates.begin(); it != finalStates.end(); it++)
+    os << *it << " ";
   os << "\n";
+
   return os;
 }

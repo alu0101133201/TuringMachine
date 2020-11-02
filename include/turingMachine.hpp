@@ -9,6 +9,7 @@
 #include <set>
 
 #include "tape.hpp"
+#include "state.hpp"
 
 void getWords(std::string initialString, std::vector<std::string> &words);
 void vectorToSet(std::vector<std::string> &initialVector, std::set<std::string> &destinationSet);
@@ -16,13 +17,12 @@ void storeLine(std::string &line, std::vector<std::string> &words, std::set<std:
 
 class TuringMachine {
   private:
-      // CJTO DE ESTADOS
+      std::vector<State> allStates; // Cjto de estados
       std::set<std::string>  turingAlphabet;  // Alfabeto de la máquina
       std::set<std::string>  tapeAlphabet;  // Alfabeto de la cinta
-      // ESTADO INICIAL
+      std::string initialState; // Estado inicial
       char whiteSymbol;
-      // CONJUNTO FINAL DE ESTAODS
-
+      std::vector<std::string> finalStates; // Estados finales
 
   public:
     TuringMachine(char* turingFile);
