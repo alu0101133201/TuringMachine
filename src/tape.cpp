@@ -13,7 +13,7 @@ Tape::~Tape() {}
 
 void Tape::loadString(std::string newString) {
   symbols.clear();
-  symbols.resize(newString.length());
+  symbols.resize((newString.length() + 1));
   for (size_t i = 0; i < newString.length(); i++)
     symbols[i] = newString[i];
   head = symbols.begin();
@@ -39,15 +39,14 @@ void Tape::writeSymbol(char symb) {
   *head = symb;
 }
 
-
 std::ostream& Tape::write(std::ostream &os) {
+  os << ".";
   for (std::vector<char>::iterator it = symbols.begin(); it != symbols.end(); it++) {
     if (it == head)
       os << "[" << *it << "]";
     else
       os << *it;
   }
-  os << "\n";
+  os << ".\n";
   return os;
 }
-
