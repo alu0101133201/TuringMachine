@@ -31,7 +31,8 @@ std::vector<Transition> State::getPossibleTransitions(std::string stringSymbol) 
 }
 
 std::ostream& State::writeTransitions(std::ostream& os) {
-  std::cout << "MÉTODO PENDIENTE DE IMPLEMENTAR\n";
+  for (size_t i = 0; i < transitions.size(); i++)
+    transitions[i].write(os);
   return os;
 }
 

@@ -8,8 +8,7 @@
  #include "transition.hpp"
 
 Transition::Transition(std::string iniSt, std::string readSymb, std::string nextState,
-    std::string writeSymb, std::string movement, int localId):
-  id(localId),
+    std::string writeSymb, std::string movement):
   initialState(iniSt),
   readSymbol(readSymb),
   nextState(nextState),
@@ -19,9 +18,6 @@ Transition::Transition(std::string iniSt, std::string readSymb, std::string next
 
 Transition::~Transition() {}
 
-int Transition::getID(void) const {
-  return id;
-}
 std::string Transition::getInitialState(void) const {
   return initialState;
 }
@@ -39,7 +35,7 @@ std::string Transition::getMove(void) const {
 }
 
 
-std::ostream& Transition::write(std::ostream &os) {
-  std::cout << "MÉTODO PENDIENTE DE IMPLEMENTAR\n";
+std::ostream& Transition::write(std::ostream &os) {  
+  os << initialState << " " << readSymbol << " " << nextState << " " << writeSymbol << " " << move << "\n";
   return os;
 }

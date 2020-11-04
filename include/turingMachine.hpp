@@ -10,6 +10,7 @@
 
 #include "tape.hpp"
 #include "state.hpp"
+#include "transition.hpp"
 
 void getWords(std::string initialString, std::vector<std::string> &words);
 void vectorToSet(std::vector<std::string> &initialVector, std::set<std::string> &destinationSet);
@@ -21,12 +22,13 @@ class TuringMachine {
       std::set<std::string>  turingAlphabet;  // Alfabeto de la máquina
       std::set<std::string>  tapeAlphabet;  // Alfabeto de la cinta
       std::string initialState; // Estado inicial
-      char whiteSymbol;
+      char whiteSymbol; // símbolo blanco
       std::vector<std::string> finalStates; // Estados finales
 
   public:
     TuringMachine(char* turingFile);
     ~TuringMachine();
 
+    bool checkTuringMachine(void);
     std::ostream& write (std::ostream& os);
 };

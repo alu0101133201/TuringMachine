@@ -18,8 +18,6 @@
 
 class Transition {
   private:
-    int id;
-
     std::string initialState; // Estado inicial
     std::string readSymbol;  // Símbolo de la cinta que se lee
     std::string nextState;  // Estado destino de la transición
@@ -28,7 +26,7 @@ class Transition {
 
   public:
     Transition(std::string iniSt, std::string readSymb, std::string nextState,
-        std::string writeSymb, std::string movement, int localId);
+        std::string writeSymb, std::string movement);
     ~Transition();
 
     /* Getters */

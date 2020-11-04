@@ -44,7 +44,8 @@ TuringMachine::TuringMachine(char* turingFile) {
     while (getline(file, line)) {   // Eliminamos los comentarios
       if (line[0] != '#') break;
     }
-    for (size_t i = 0; i < words.size(); i++) { // Leemos el cjto de estados
+    getWords(line, words); 
+    for (size_t i = 0; i < words.size(); i++) { // Almacenamos
       allStates.push_back(*(new State(words[i])));
     }
     getline(file, line);  // Alfabeto de la máquina
@@ -59,9 +60,22 @@ TuringMachine::TuringMachine(char* turingFile) {
     getWords(line, words);
     for (size_t i = 0; i < words.size(); i++) 
       finalStates.push_back(words[i]);
-    
-    // TRANSICIONES -----------------------
 
+    while (getline(file, line)) {   // Leemos la transiciones
+      getWords(line, words);
+      for (size_t i = 0; i < allStates.size(); i++) { // Almaceno al transición en su estado correspondiente
+        if (allStates[i].getID() == words[0]) {
+          Transition aux(words[0], words[1], words[2], words[3], words[4]);
+          allStates[i].pushTransition(aux);
+        }
+        words.clear();
+      }
+    }
+
+    if (!checkTuringMachine()) {  // Comprobamos que la máquina de turing sea válida
+      std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
+      throw std::runtime_error(s);
+    }
   } else {
     std::string s("ERROR EN TIEMPO DE EJECUCIÓN - No se pudo abrir el fichero\n");
     throw std::runtime_error(s);
@@ -70,6 +84,11 @@ TuringMachine::TuringMachine(char* turingFile) {
 }
 
 TuringMachine::~TuringMachine() {}
+
+bool TuringMachine::checkTuringMachine() {
+  std::cout << "HAY QUE CHECKEAR\n";
+  return true;
+}
 
 
 std::ostream& TuringMachine::write (std::ostream& os) {
@@ -85,7 +104,13 @@ std::ostream& TuringMachine::write (std::ostream& os) {
   os << "\n ·Estado inicial: " << initialState << "\n ·Estados finales: ";
   for (std::vector<std::string>::iterator it = finalStates.begin(); it != finalStates.end(); it++)
     os << *it << " ";
-  os << "\n";
+  os << "\nTransiciones: \n"; 
+  for (size_t i = 0; i < allStates.size(); i++) { 
+    for (size_t j = 0; j < allStates[i].getTransitions().size(); j++) {
+      os << " ·";
+      allStates[i].getTransitions()[j].write(os);
+    }
+  }
 
   return os;
 }
