@@ -11,6 +11,8 @@
 #include "tape.hpp"
 #include "state.hpp"
 #include "transition.hpp"
+#include <fstream>
+#include <sstream>
 
 void getWords(std::string initialString, std::vector<std::string> &words);
 void vectorToSet(std::vector<std::string> &initialVector, std::set<std::string> &destinationSet);
@@ -25,13 +27,15 @@ class TuringMachine {
       char whiteSymbol; // símbolo blanco
       std::vector<std::string> finalStates; // Estados finales
 
-    bool checkTuringMachine(void);
-    bool checkTransitions(void);
-    bool existState(std::string state);
+      bool checkTuringMachine(void);
+      bool checkTransitions(void);
+      bool existState(std::string state);
 
   public:
     TuringMachine(char* turingFile);
     ~TuringMachine();
 
+    bool test(std::string stringToTest);
+    
     std::ostream& write (std::ostream& os);
 };

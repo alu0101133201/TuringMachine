@@ -1,22 +1,69 @@
 #include <iostream>
-
+#include <fstream>
 #include "tape.hpp"
 #include "turingMachine.hpp"
+
+
+void keyboardMode(TuringMachine turingMachine) {
+	std::string keyboardString;
+  do {
+		std::cout << "\nIntroduzca cadena a reconocer por el autómata (X para salir)\n >> ";
+		std::cin >> keyboardString;
+		try {
+			if (keyboardString != "X")
+				if (!turingMachine.test(keyboardString))
+					std::cout << "La cadena: " << keyboardString << " no ha sido aceptada\n";
+			} catch(bool &e) {
+			std::cout << "La cadena: " << keyboardString << " ha sido aceptada\n";
+		}
+	} while(keyboardString != "X");
+}
+
+void fileMode(TuringMachine turingMachine) {
+	std::string fileName;
+	std::cout << "\nIntroduzca nombre del fichero\n >> ";
+	std::cin >> fileName;
+
+  std::string line;
+	std::ifstream file(fileName);
+
+	if (file.is_open()) {
+    while (getline(file, line)) {
+			try {
+				if (!turingMachine.test(line))
+					std::cout << "La cadena: " << line << " no ha sido aceptada\n";
+			} catch(bool &e) {
+			std::cout << "La cadena: " << line << " ha sido aceptada\n";
+			}
+		}
+	} else {
+		std::string s("ERROR EN TIEMPO DE EJECUCIÓN - No se pudo abrir el fichero\n");
+    throw std::runtime_error(s);
+	}
+}
+
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
     std::cerr << "Debe introducir el nombre del fichero que contiene al autómata\n";
     return(1);
   } else {
-    try {
-      Tape prueba;
-      TuringMachine testMachine(argv[1]);
+      try {
+        int option;
 
-      testMachine.write(std::cout);
-
-    } catch(std::runtime_error &e) {
-      std::cerr << e.what();
-      return(2);
-    }
+        TuringMachine testTuringMachine(argv[1]);
+        testTuringMachine.write(std::cout);
+        std::cout << "\n\nSeleccione método para introducir las cadenas:\n 1.- Teclado\n 2.- Fichero\n >> ";
+        std::cin >> option;
+        if (option == 1) {
+          keyboardMode(testTuringMachine);
+        } else {
+          fileMode(testTuringMachine);
+        }
+      } catch(std::runtime_error &e) {
+        std::cerr << e.what();
+        return(2);
+      }
   }
+  return(0);
 }

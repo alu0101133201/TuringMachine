@@ -5,8 +5,7 @@
  * 02/11/2020
  */
 #include "turingMachine.hpp"
-#include <fstream>
-#include <sstream>
+
 
 // Función auxiliar que vuelva un vector en un set
 void vectorToSet(std::vector<std::string> &initialVector, std::set<std::string> &destinationSet) {
@@ -76,7 +75,6 @@ TuringMachine::TuringMachine(char* turingFile) {
         words.clear();
       }
     }
-
     if (!checkTuringMachine()) {  // Comprobamos que la máquina de turing sea válida
       std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
       throw std::runtime_error(s);
@@ -131,6 +129,15 @@ bool TuringMachine::existState(std::string state) {
   }
   return false;
 }
+
+
+
+bool TuringMachine::test(std::string stringToTest) {
+  std::string currentState = initialState;
+  
+  return true;
+}
+
 
 std::ostream& TuringMachine::write (std::ostream& os) {
   os << " - - - TURING MACHINE - - -\n ·Cjto de estados: ";
