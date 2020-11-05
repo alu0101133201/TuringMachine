@@ -25,10 +25,13 @@ class TuringMachine {
       char whiteSymbol; // símbolo blanco
       std::vector<std::string> finalStates; // Estados finales
 
+    bool checkTuringMachine(void);
+    bool checkTransitions(void);
+    bool existState(std::string state);
+
   public:
     TuringMachine(char* turingFile);
     ~TuringMachine();
 
-    bool checkTuringMachine(void);
     std::ostream& write (std::ostream& os);
 };

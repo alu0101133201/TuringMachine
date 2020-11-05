@@ -63,6 +63,11 @@ TuringMachine::TuringMachine(char* turingFile) {
 
     while (getline(file, line)) {   // Leemos la transiciones
       getWords(line, words);
+    
+      if (!existState(words[0])) {  // compruebo que el estado de partida existe
+        std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
+        throw std::runtime_error(s);
+      }
       for (size_t i = 0; i < allStates.size(); i++) { // Almaceno al transición en su estado correspondiente
         if (allStates[i].getID() == words[0]) {
           Transition aux(words[0], words[1], words[2], words[3], words[4]);
@@ -86,10 +91,46 @@ TuringMachine::TuringMachine(char* turingFile) {
 TuringMachine::~TuringMachine() {}
 
 bool TuringMachine::checkTuringMachine() {
-  std::cout << "HAY QUE CHECKEAR\n";
+  bool findInitialState = false;
+
+  // Comprobamos que el estado inicial existe en el cjto de estados
+  for (std::vector<State>::iterator it = allStates.begin(); it != allStates.end(); it++) {
+    if ((*it).getID() == initialState)
+      findInitialState = true;
+  }
+  if (!findInitialState)
+    return false;
+  // Comprobamos el cjto de estados finales
+  for (std::vector<std::string>::iterator it = finalStates.begin(); it != finalStates.end(); it++) {
+    if (!existState(*it))
+      return false;
+  }
+  return checkTransitions();
+}
+
+bool TuringMachine::checkTransitions(void) {
+  for (std::vector<State>::iterator it = allStates.begin(); it != allStates.end(); it++) {
+    std::vector<Transition> currentTransitions = (*it).getTransitions();
+    for (std::vector<Transition>::iterator secondIt = currentTransitions.begin(); 
+        secondIt != currentTransitions.end(); secondIt++) {
+      if (tapeAlphabet.find((*secondIt).getReadSymbol()) == tapeAlphabet.end() ||
+          tapeAlphabet.find((*secondIt).getWriteSymbol()) == tapeAlphabet.end() ||
+          (((*secondIt).getMove() != "L") && ((*secondIt).getMove() != "R") && ((*secondIt).getMove() != "S")) ||
+          !existState((*secondIt).getNextState())) // El estado inicial ya se comprueba en la lectura del fichero
+        return false;
+    }
+  }
   return true;
 }
 
+bool TuringMachine::existState(std::string state) {
+  for (std::vector<State>::iterator it = allStates.begin(); it != allStates.end(); it++) {
+    if ((*it).getID() == state) {
+      return true;
+    }
+  }
+  return false;
+}
 
 std::ostream& TuringMachine::write (std::ostream& os) {
   os << " - - - TURING MACHINE - - -\n ·Cjto de estados: ";
@@ -111,6 +152,5 @@ std::ostream& TuringMachine::write (std::ostream& os) {
       allStates[i].getTransitions()[j].write(os);
     }
   }
-
   return os;
 }
