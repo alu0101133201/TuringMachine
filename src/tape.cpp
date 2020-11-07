@@ -24,6 +24,7 @@ void Tape::loadStrings(std::vector<std::string> stringsToLoad, std::string white
   head = symbols.begin();
 }
 
+
 void Tape::moveRight(void) {
     head = std::next(head);
 }
@@ -48,10 +49,10 @@ std::ostream& Tape::write(std::ostream &os) {
   os << ".";
   for (std::vector<std::string>::iterator it = symbols.begin(); it != symbols.end(); it++) {
     if (it == head)
-      os << "[" << *it << "]";
+      os << "|\033[4m" << *it << "\033[0m";
     else
-      os << *it;
+      os << "|" << *it;
   }
-  os << ".\n";
+  os << "  ";
   return os;
 }
