@@ -147,7 +147,6 @@ bool TuringMachine::isFinal(std::string state) {
 bool TuringMachine::test(std::vector<std::string> stringsToTest) {
   turingTape.loadStrings(stringsToTest, whiteSymbol);
   currentState = initialState;
-  writeCurrentMachine(std::cout);
 
   while (!isFinal((*currentState).getID())) {
     Transition nextTransition = (*currentState).getTransition(turingTape.getSymbol());

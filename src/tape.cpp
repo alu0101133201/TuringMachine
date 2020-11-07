@@ -21,20 +21,27 @@ void Tape::loadStrings(std::vector<std::string> stringsToLoad, std::string white
     }
     symbols.push_back(white);
   }
-  head = symbols.begin();
+  head = 0;
 }
 
 
 void Tape::moveRight(void) {
-    head = std::next(head);
+  if (head == (symbols.size() - 1)) {
+    symbols.push_back(".");
+  }
+  ++head;
 }
 
 void Tape::moveLeft(void) {
-  head = std::prev(head);
+  if (head == 0) {
+    symbols.insert(symbols.begin(), ".");
+  } else {
+    --head;
+  }
 }
 
 std::string Tape::getSymbol(void) {
-  return *head;
+  return symbols[head];
 }
 
 int Tape::getCurrentSize(void) {
@@ -42,16 +49,16 @@ int Tape::getCurrentSize(void) {
 }
 
 void Tape::writeSymbol(std::string symb) {
-  *head = symb;
+  symbols[head] = symb;
 }
 
 std::ostream& Tape::write(std::ostream &os) {
   os << ".";
-  for (std::vector<std::string>::iterator it = symbols.begin(); it != symbols.end(); it++) {
-    if (it == head)
-      os << "|\033[4m" << *it << "\033[0m";
+  for (size_t i = 0; i < symbols.size(); i++) {
+    if (i == head)
+      os << "|\033[4m" << symbols[i] << "\033[0m";
     else
-      os << "|" << *it;
+      os << "|" << symbols[i];
   }
   os << "  ";
   return os;

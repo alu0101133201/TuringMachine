@@ -13,7 +13,7 @@
 class Tape {
   private: 
     std::vector<std::string> symbols;
-    std::vector<std::string>::iterator head;
+    int head;
 
   public:
     Tape();
