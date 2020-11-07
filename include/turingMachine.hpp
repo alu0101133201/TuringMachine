@@ -23,19 +23,25 @@ class TuringMachine {
       std::vector<State> allStates; // Cjto de estados
       std::set<std::string>  turingAlphabet;  // Alfabeto de la máquina
       std::set<std::string>  tapeAlphabet;  // Alfabeto de la cinta
-      std::string initialState; // Estado inicial
-      char whiteSymbol; // símbolo blanco
+      State* initialState; // Estado inicial
+      std::string whiteSymbol; // símbolo blanco
       std::vector<std::string> finalStates; // Estados finales
+      Tape turingTape;
+
+
+      State* currentState; 
 
       bool checkTuringMachine(void);
       bool checkTransitions(void);
       bool existState(std::string state);
+      bool isFinal(std::string state);
 
   public:
     TuringMachine(char* turingFile);
     ~TuringMachine();
 
-    bool test(std::string stringToTest);
+    bool test(std::vector<std::string> stringsToTest);
     
     std::ostream& write (std::ostream& os);
+    std::ostream& writeCurrentMachine (std::ostream& os);
 };

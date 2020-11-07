@@ -6,15 +6,16 @@
 
 void keyboardMode(TuringMachine turingMachine) {
 	std::string keyboardString;
+	std::vector<std::string> inputs;
   do {
 		std::cout << "\nIntroduzca cadena a reconocer por el autómata (X para salir)\n >> ";
-		std::cin >> keyboardString;
-		try {
-			if (keyboardString != "X")
-				if (!turingMachine.test(keyboardString))
-					std::cout << "La cadena: " << keyboardString << " no ha sido aceptada\n";
-			} catch(bool &e) {
-			std::cout << "La cadena: " << keyboardString << " ha sido aceptada\n";
+		getline(std::cin, keyboardString);
+		getWords(keyboardString, inputs);
+		if (keyboardString != "X") {
+			if (!turingMachine.test(inputs))
+				std::cout << "La cadena: " << keyboardString << " no ha sido aceptada\n";
+			else 
+				std::cout << "La cadena: " << keyboardString << " ha sido aceptada\n";
 		}
 	} while(keyboardString != "X");
 }
@@ -25,16 +26,16 @@ void fileMode(TuringMachine turingMachine) {
 	std::cin >> fileName;
 
   std::string line;
+	std::vector<std::string> inputs;
 	std::ifstream file(fileName);
 
 	if (file.is_open()) {
     while (getline(file, line)) {
-			try {
-				if (!turingMachine.test(line))
-					std::cout << "La cadena: " << line << " no ha sido aceptada\n";
-			} catch(bool &e) {
-			std::cout << "La cadena: " << line << " ha sido aceptada\n";
-			}
+			getWords(line, inputs);
+			if (!turingMachine.test(inputs))
+				std::cout << "La cadena: " << line << " no ha sido aceptada\n";
+			else
+				std::cout << "La cadena: " << line << " ha sido aceptada\n";
 		}
 	} else {
 		std::string s("ERROR EN TIEMPO DE EJECUCIÓN - No se pudo abrir el fichero\n");
@@ -50,11 +51,14 @@ int main(int argc, char *argv[]) {
   } else {
       try {
         int option;
+				std::string dummy; // variable para limpiar el buffer de entrada
 
         TuringMachine testTuringMachine(argv[1]);
         testTuringMachine.write(std::cout);
         std::cout << "\n\nSeleccione método para introducir las cadenas:\n 1.- Teclado\n 2.- Fichero\n >> ";
         std::cin >> option;
+				getline(std::cin, dummy);
+				// limpiar el resto de la salida
         if (option == 1) {
           keyboardMode(testTuringMachine);
         } else {

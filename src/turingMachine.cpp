@@ -44,7 +44,7 @@ TuringMachine::TuringMachine(char* turingFile) {
       if (line[0] != '#') break;
     }
     getWords(line, words); 
-    for (size_t i = 0; i < words.size(); i++) { // Almacenamos
+    for (size_t i = 0; i < words.size(); i++) { // Almacenamos los estados
       allStates.push_back(*(new State(words[i])));
     }
     getline(file, line);  // Alfabeto de la máquina
@@ -52,9 +52,14 @@ TuringMachine::TuringMachine(char* turingFile) {
     getline(file, line);  // Alfabeto de la cinta
     storeLine(line, words, tapeAlphabet);
     getline(file, line);  // Estado inicial
-    initialState = line;
+    for (size_t i = 0; i < allStates.size(); i++) {
+      if (allStates[i].getID() == line) {
+        initialState = &allStates[i];
+        currentState = &allStates[i];
+      }
+    }
     getline(file, line); // símbolo blanco
-    whiteSymbol = line[0];
+    whiteSymbol = line;
     getline(file, line); // Cjto de estados finales
     getWords(line, words);
     for (size_t i = 0; i < words.size(); i++) 
@@ -93,7 +98,7 @@ bool TuringMachine::checkTuringMachine() {
 
   // Comprobamos que el estado inicial existe en el cjto de estados
   for (std::vector<State>::iterator it = allStates.begin(); it != allStates.end(); it++) {
-    if ((*it).getID() == initialState)
+    if ((*it).getID() == (*initialState).getID())
       findInitialState = true;
   }
   if (!findInitialState)
@@ -130,11 +135,34 @@ bool TuringMachine::existState(std::string state) {
   return false;
 }
 
+bool TuringMachine::isFinal(std::string state) {
+  for (std::vector<std::string>::iterator it = finalStates.begin(); it != finalStates.end(); it++) {
+    if ((*it) == state) {
+      return true;
+    }
+  }
+  return false;
+}
 
+bool TuringMachine::test(std::vector<std::string> stringsToTest) {
+  turingTape.loadStrings(stringsToTest, whiteSymbol);
 
-bool TuringMachine::test(std::string stringToTest) {
-  std::string currentState = initialState;
-  
+  while (!isFinal((*currentState).getID())) {
+    Transition nextTransition = (*currentState).getTransition(turingTape.getSymbol());
+    if (nextTransition.getInitialState() == " ")  // Si la transición está vacía, paramos la máquina
+      return false;
+    else {
+      for (size_t i = 0; i < allStates.size(); i++) // Actualizamos el estado
+        if (allStates[i].getID() == nextTransition.getNextState())
+          currentState = &allStates[i];
+      turingTape.writeSymbol(nextTransition.getWriteSymbol());  // Escribimos el símbolo correspondiente
+      if (nextTransition.getMove() == "R")  // Realizamos el movimiento del cabezal
+        turingTape.moveRight();
+      else if (nextTransition.getMove() == "L")
+        turingTape.moveLeft();
+      writeCurrentMachine(std::cout);
+    }
+  }
   return true;
 }
 
@@ -149,7 +177,7 @@ std::ostream& TuringMachine::write (std::ostream& os) {
   os << "\n ·Alfabeto de la cinta: ";
   for (std::set<std::string>::iterator it = tapeAlphabet.begin(); it != tapeAlphabet.end(); it++)
     os << *it << " ";
-  os << "\n ·Estado inicial: " << initialState << "\n ·Estados finales: ";
+  os << "\n ·Estado inicial: " << (*initialState).getID() << "\n ·Estados finales: ";
   for (std::vector<std::string>::iterator it = finalStates.begin(); it != finalStates.end(); it++)
     os << *it << " ";
   os << "\nTransiciones: \n"; 
@@ -159,5 +187,11 @@ std::ostream& TuringMachine::write (std::ostream& os) {
       allStates[i].getTransitions()[j].write(os);
     }
   }
+  return os;
+}
+
+std::ostream& TuringMachine::writeCurrentMachine(std::ostream& os) {
+  std::cout << "Estado actual: " << (*currentState).getID() << "\nCinta: ";
+  turingTape.write(os);
   return os;
 }

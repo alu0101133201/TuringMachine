@@ -30,7 +30,6 @@ class Transition {
     ~Transition();
 
     /* Getters */
-    int getID(void) const;
     std::string getInitialState(void) const;
     std::string getReadSymbol(void) const;
     std::string getWriteSymbol(void) const;

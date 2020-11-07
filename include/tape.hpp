@@ -12,20 +12,20 @@
 
 class Tape {
   private: 
-    std::vector<char> symbols;
-    std::vector<char>::iterator head;
+    std::vector<std::string> symbols;
+    std::vector<std::string>::iterator head;
 
   public:
     Tape();
     ~Tape();
-    void loadString(std::string newString);
+    void loadStrings(std::vector<std::string> stringsToLoad, std::string white);
 
     void moveRight(void);
     void moveLeft(void);
 
-    int getSymbol(void);
+    std::string getSymbol(void);
     int getCurrentSize(void);
-    void writeSymbol(char symb);
+    void writeSymbol(std::string symb);
 
     std::ostream& write(std::ostream &os);
 };

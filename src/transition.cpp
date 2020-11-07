@@ -34,7 +34,6 @@ std::string Transition::getMove(void) const {
   return move;
 }
 
-
 std::ostream& Transition::write(std::ostream &os) {  
   os << initialState << " " << readSymbol << " " << nextState << " " << writeSymbol << " " << move << "\n";
   return os;

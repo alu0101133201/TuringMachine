@@ -24,10 +24,14 @@ void State::pushTransition(Transition newTransition) {
   transitions.push_back(newTransition);
 }
 
-std::vector<Transition> State::getPossibleTransitions(std::string stringSymbol) {
-  std::cout << "MÉTODO PENDIENTE DE IMPLEMENTAR\n";
-  std::vector<Transition> dummy;
-  return dummy;
+Transition State::getTransition(std::string stringSymbol) {
+  for (size_t i = 0; i < transitions.size(); i++) {
+    if ((transitions[i].getInitialState() == id) && (transitions[i].getReadSymbol() == stringSymbol))
+      return transitions[i];
+  }
+  std::string voidString(" ");
+  Transition voidTransition(voidString, voidString, voidString, voidString, voidString);
+  return voidTransition;
 }
 
 std::ostream& State::writeTransitions(std::ostream& os) {
