@@ -7,8 +7,8 @@
  **/
  #include "transition.hpp"
 
-Transition::Transition(std::string iniSt, std::string readSymb, std::string nextState,
-    std::string writeSymb, std::string movement):
+Transition::Transition(std::string iniSt, std::vector<std::string> readSymb, std::string nextState,
+        std::vector<std::string> writeSymb, std::vector<std::string> movement):
   initialState(iniSt),
   readSymbol(readSymb),
   nextState(nextState),
@@ -21,20 +21,27 @@ Transition::~Transition() {}
 std::string Transition::getInitialState(void) const {
   return initialState;
 }
-std::string Transition::getReadSymbol(void) const {
+std::vector<std::string> Transition::getReadSymbol(void) const {
   return readSymbol;
 }
-std::string Transition::getWriteSymbol(void) const {
+std::vector<std::string> Transition::getWriteSymbol(void) const {
   return writeSymbol;
 }
 std::string Transition::getNextState(void) const {
   return nextState;
 }
-std::string Transition::getMove(void) const {
+std::vector<std::string> Transition::getMove(void) const {
   return move;
 }
 
 std::ostream& Transition::write(std::ostream &os) {  
-  os << initialState << " " << readSymbol << " " << nextState << " " << writeSymbol << " " << move << "\n";
+  os << initialState << " ";
+  for (size_t i = 0; i < readSymbol.size(); i++)
+    os << readSymbol[i] << " ";
+  os << nextState << " ";
+  for (size_t i = 0; i < writeSymbol.size(); i++)
+    os << writeSymbol[i] << " ";
+  for (size_t i = 0; i < move.size(); i++)
+    os << move[i] << " ";
   return os;
 }

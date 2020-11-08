@@ -43,6 +43,8 @@ TuringMachine::TuringMachine(char* turingFile) {
     while (getline(file, line)) {   // Eliminamos los comentarios
       if (line[0] != '#') break;
     }
+    numberOfTapes = stoi(line);
+    getline(file, line);  // leemos los estados
     getWords(line, words); 
     for (size_t i = 0; i < words.size(); i++) { // Almacenamos los estados
       allStates.push_back(*(new State(words[i])));
@@ -62,33 +64,33 @@ TuringMachine::TuringMachine(char* turingFile) {
     whiteSymbol = line;
     getline(file, line); // Cjto de estados finales
     getWords(line, words);
-    for (size_t i = 0; i < words.size(); i++) 
+    for (size_t i = 0; i < words.size(); i++) {
       finalStates.push_back(words[i]);
+    }
 
     while (getline(file, line)) {   // Leemos la transiciones
-      getWords(line, words);
+      // getWords(line, words);
     
-      if (!existState(words[0])) {  // compruebo que el estado de partida existe
-        std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
-        throw std::runtime_error(s);
-      }
-      for (size_t i = 0; i < allStates.size(); i++) { // Almaceno al transición en su estado correspondiente
-        if (allStates[i].getID() == words[0]) {
-          Transition aux(words[0], words[1], words[2], words[3], words[4]);
-          allStates[i].pushTransition(aux);
-        }
-        words.clear();
-      }
+      // if (!existState(words[0])) {  // compruebo que el estado de partida existe
+      //   std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
+      //   throw std::runtime_error(s);
+      // }
+      // for (size_t i = 0; i < allStates.size(); i++) { // Almaceno al transición en su estado correspondiente
+      //   if (allStates[i].getID() == words[0]) {
+      //     Transition aux(words[0], words[1], words[2], words[3], words[4]);
+      //     allStates[i].pushTransition(aux);
+      //   }
+      //   words.clear();
+      // }
     }
-    if (!checkTuringMachine()) {  // Comprobamos que la máquina de turing sea válida
-      std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
-      throw std::runtime_error(s);
-    }
+    // if (!checkTuringMachine()) {  // Comprobamos que la máquina de turing sea válida
+    //   std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
+    //   throw std::runtime_error(s);
+    // }
   } else {
     std::string s("ERROR EN TIEMPO DE EJECUCIÓN - No se pudo abrir el fichero\n");
     throw std::runtime_error(s);
   }
-
 }
 
 TuringMachine::~TuringMachine() {}
@@ -112,17 +114,17 @@ bool TuringMachine::checkTuringMachine() {
 }
 
 bool TuringMachine::checkTransitions(void) {
-  for (std::vector<State>::iterator it = allStates.begin(); it != allStates.end(); it++) {
-    std::vector<Transition> currentTransitions = (*it).getTransitions();
-    for (std::vector<Transition>::iterator secondIt = currentTransitions.begin(); 
-        secondIt != currentTransitions.end(); secondIt++) {
-      if (tapeAlphabet.find((*secondIt).getReadSymbol()) == tapeAlphabet.end() ||
-          tapeAlphabet.find((*secondIt).getWriteSymbol()) == tapeAlphabet.end() ||
-          (((*secondIt).getMove() != "L") && ((*secondIt).getMove() != "R") && ((*secondIt).getMove() != "S")) ||
-          !existState((*secondIt).getNextState())) // El estado inicial ya se comprueba en la lectura del fichero
-        return false;
-    }
-  }
+  // for (std::vector<State>::iterator it = allStates.begin(); it != allStates.end(); it++) {
+  //   std::vector<Transition> currentTransitions = (*it).getTransitions();
+  //   for (std::vector<Transition>::iterator secondIt = currentTransitions.begin(); 
+  //       secondIt != currentTransitions.end(); secondIt++) {
+  //     if (tapeAlphabet.find((*secondIt).getReadSymbol()) == tapeAlphabet.end() ||
+  //         tapeAlphabet.find((*secondIt).getWriteSymbol()) == tapeAlphabet.end() ||
+  //         (((*secondIt).getMove() != "L") && ((*secondIt).getMove() != "R") && ((*secondIt).getMove() != "S")) ||
+  //         !existState((*secondIt).getNextState())) // El estado inicial ya se comprueba en la lectura del fichero
+  //       return false;
+  //   }
+  // }
   return true;
 }
 
@@ -145,32 +147,33 @@ bool TuringMachine::isFinal(std::string state) {
 }
 
 bool TuringMachine::test(std::vector<std::string> stringsToTest) {
-  turingTape.loadStrings(stringsToTest, whiteSymbol);
-  currentState = initialState;
-  writeCurrentMachine(std::cout);
+  // turingTape.loadStrings(stringsToTest, whiteSymbol);
+  // currentState = initialState;
+  // writeCurrentMachine(std::cout);
 
-  while (!isFinal((*currentState).getID())) {
-    Transition nextTransition = (*currentState).getTransition(turingTape.getSymbol());
-    if (nextTransition.getInitialState() == " ")  // Si la transición está vacía, paramos la máquina
-      return false;
-    else {
-      for (size_t i = 0; i < allStates.size(); i++) // Actualizamos el estado
-        if (allStates[i].getID() == nextTransition.getNextState())
-          currentState = &allStates[i];
-      turingTape.writeSymbol(nextTransition.getWriteSymbol());  // Escribimos el símbolo correspondiente
-      if (nextTransition.getMove() == "R")  // Realizamos el movimiento del cabezal
-        turingTape.moveRight();
-      else if (nextTransition.getMove() == "L")
-        turingTape.moveLeft();
-      writeCurrentMachine(std::cout);
-    }
-  }
-  return true;
+  // while (!isFinal((*currentState).getID())) {
+  //   Transition nextTransition = (*currentState).getTransition(turingTape.getSymbol());
+  //   if (nextTransition.getInitialState() == " ")  // Si la transición está vacía, paramos la máquina
+  //     return false;
+  //   else {
+  //     for (size_t i = 0; i < allStates.size(); i++) // Actualizamos el estado
+  //       if (allStates[i].getID() == nextTransition.getNextState())
+  //         currentState = &allStates[i];
+  //     turingTape.writeSymbol(nextTransition.getWriteSymbol());  // Escribimos el símbolo correspondiente
+  //     if (nextTransition.getMove() == "R")  // Realizamos el movimiento del cabezal
+  //       turingTape.moveRight();
+  //     else if (nextTransition.getMove() == "L")
+  //       turingTape.moveLeft();
+  //     writeCurrentMachine(std::cout);
+  //   }
+  // }
+  // return true;
 }
 
 
 std::ostream& TuringMachine::write (std::ostream& os) {
-  os << " - - - TURING MACHINE - - -\n ·Cjto de estados: ";
+  os << " - - - TURING MACHINE - - -\n ·Número de cintas: " << numberOfTapes << "\n";
+  os << " ·Cjto de estados: ";
   for (size_t i = 0; i < allStates.size(); i++)
     os << allStates[i].getID() << " ";
   os << "\n ·Alfabeto de entrada: ";
@@ -182,13 +185,13 @@ std::ostream& TuringMachine::write (std::ostream& os) {
   os << "\n ·Estado inicial: " << (*initialState).getID() << "\n ·Estados finales: ";
   for (std::vector<std::string>::iterator it = finalStates.begin(); it != finalStates.end(); it++)
     os << *it << " ";
-  os << "\nTransiciones: \n"; 
-  for (size_t i = 0; i < allStates.size(); i++) { 
-    for (size_t j = 0; j < allStates[i].getTransitions().size(); j++) {
-      os << " ·";
-      allStates[i].getTransitions()[j].write(os);
-    }
-  }
+  // os << "\nTransiciones: \n"; 
+  // for (size_t i = 0; i < allStates.size(); i++) { 
+  //   for (size_t j = 0; j < allStates[i].getTransitions().size(); j++) {
+  //     os << " ·";
+  //     allStates[i].getTransitions()[j].write(os);
+  //   }
+  // }
   return os;
 }
 

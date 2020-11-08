@@ -30,6 +30,7 @@ class TuringMachine {
 
 
       State* currentState; 
+      int numberOfTapes;
 
       bool checkTuringMachine(void);
       bool checkTransitions(void);
