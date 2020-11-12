@@ -18,18 +18,23 @@ class Tape {
   public:
     Tape();
     ~Tape();
+
+    // Métodos de inicialización
     void loadStrings(std::vector<std::string> stringsToLoad, std::string white);
     void setNumberOfTapes(int tapes);
 
+    // Métodos de movimiento de los cabezales
     void moveRight(int tape);
     void moveLeft(int tape);
+    void NMoves(std::vector<std::string>);
 
+    // getters y setters
     std::string getSymbol(int tape);
     std::vector<std::string> getAllPositionSymbols(void);
     int getCurrentSize(int tape);
     void writeSymbol(int tape, std::string symb);
-
     void writeNSymbols(std::vector<std::string>);
-    void NMoves(std::vector<std::string>);
+
+    // Método de impresión
     std::ostream& write(std::ostream &os);
 };

@@ -24,8 +24,9 @@ class State {
 
   /* Getters*/
   std::string getID (void) const;
-  bool readSymbsInTransition(std::vector<std::string> readSymb, std::vector<std::string> transitionsSymb);
   std::vector<Transition> getTransitions();
+  // Método que recibe un cjto de símbolos leídos y comprueba si son los mismo que se leen en la transición
+  bool readSymbsInTransition(std::vector<std::string> readSymb, std::vector<std::string> transitionsSymb);
   /* Metodo para añadirle una transición al autómata*/
   void pushTransition(Transition);
   /* Método que devuelve las transiciones posibles dado un símbolo de entrada y un símbolo de pila */
