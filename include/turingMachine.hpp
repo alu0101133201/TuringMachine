@@ -34,6 +34,9 @@ class TuringMachine {
 
       bool checkTuringMachine(void);
       bool checkTransitions(void);
+      bool checkTapeSymbols(std::vector<std::string> elementsToCheck);
+      bool checkMoves(std::vector<std::string> elementsToCheck);
+
       bool existState(std::string state);
       bool isFinal(std::string state);
 

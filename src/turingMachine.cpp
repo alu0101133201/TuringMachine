@@ -71,10 +71,10 @@ TuringMachine::TuringMachine(char* turingFile) {
     }
     readTransitions(file);  // Leemos las transiciones
     
-    // if (!checkTuringMachine()) {  // Comprobamos que la máquina de turing sea válida
-    //   std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
-    //   throw std::runtime_error(s);
-    // }
+    if (!checkTuringMachine()) {  // Comprobamos que la máquina de turing sea válida
+      std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
+      throw std::runtime_error(s);
+    }
   } else {
     std::string s("ERROR EN TIEMPO DE EJECUCIÓN - No se pudo abrir el fichero\n");
     throw std::runtime_error(s);
@@ -146,20 +146,34 @@ bool TuringMachine::checkTuringMachine() {
 }
 
 bool TuringMachine::checkTransitions(void) {
-  // for (std::vector<State>::iterator it = allStates.begin(); it != allStates.end(); it++) {
-  //   std::vector<Transition> currentTransitions = (*it).getTransitions();
-  //   for (std::vector<Transition>::iterator secondIt = currentTransitions.begin(); 
-  //       secondIt != currentTransitions.end(); secondIt++) {
-  //     if (tapeAlphabet.find((*secondIt).getReadSymbol()) == tapeAlphabet.end() ||
-  //         tapeAlphabet.find((*secondIt).getWriteSymbol()) == tapeAlphabet.end() ||
-  //         (((*secondIt).getMove() != "L") && ((*secondIt).getMove() != "R") && ((*secondIt).getMove() != "S")) ||
-  //         !existState((*secondIt).getNextState())) // El estado inicial ya se comprueba en la lectura del fichero
-  //       return false;
-  //   }
-  // }
+  for (std::vector<State>::iterator it = allStates.begin(); it != allStates.end(); it++) {
+    std::vector<Transition> currentTransitions = (*it).getTransitions();
+    for (std::vector<Transition>::iterator secondIt = currentTransitions.begin(); 
+        secondIt != currentTransitions.end(); secondIt++) {
+      if (!checkTapeSymbols((*secondIt).getReadSymbol())||
+          !checkTapeSymbols((*secondIt).getWriteSymbol()) ||
+          !checkMoves((*secondIt).getMove()) ||
+          !existState((*secondIt).getNextState())) // El estado inicial ya se comprueba en la lectura del fichero
+        return false;
+    }
+  }
+  return true;
+}
+bool TuringMachine::checkTapeSymbols(std::vector<std::string> elementsToCheck) {
+  for (size_t i = 0; i < elementsToCheck.size(); i++) {
+    if (tapeAlphabet.find(elementsToCheck[i]) == tapeAlphabet.end())
+      return false;
+  }
   return true;
 }
 
+bool TuringMachine::checkMoves(std::vector<std::string> elementsToCheck) {
+  for (size_t i = 0; i < elementsToCheck.size(); i++) {
+    if (elementsToCheck[i] != "R" && elementsToCheck[i] != "L" && elementsToCheck[i] != "S")
+      return false;
+  }
+  return true;
+}
 bool TuringMachine::existState(std::string state) {
   for (std::vector<State>::iterator it = allStates.begin(); it != allStates.end(); it++) {
     if ((*it).getID() == state) {
