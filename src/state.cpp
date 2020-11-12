@@ -24,7 +24,7 @@ void State::pushTransition(Transition newTransition) {
   transitions.push_back(newTransition);
 }
 
-Transition State::getTransition(std::string stringSymbol) {
+Transition State::getTransition(std::vector<std::string> stringSymbol) {
   // for (size_t i = 0; i < transitions.size(); i++) {
   //   if ((transitions[i].getInitialState() == id) && (transitions[i].getReadSymbol() == stringSymbol))
   //     return transitions[i];

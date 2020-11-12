@@ -12,54 +12,78 @@ Tape::Tape() {}
 Tape::~Tape() {}
 
 void Tape::loadStrings(std::vector<std::string> stringsToLoad, std::string white) {
-  symbols.clear();
-
+  symbols[0].clear();
+  for (size_t i = 1; i < symbols.size(); i++) {
+    symbols[i].clear();
+    symbols[i].push_back(".");
+  }
   for (size_t i = 0; i < stringsToLoad.size(); i++) {
     for (size_t j = 0; j < stringsToLoad[i].length(); j++) {
       std::string dummy(1, stringsToLoad[i][j]);
-      symbols.push_back(dummy);
+      symbols[0].push_back(dummy);
     }
-    symbols.push_back(white);
+    symbols[0].push_back(white);
   }
-  head = 0;
+  for (size_t i = 0; i < symbols.size(); i++) {
+    head[i] = 0;
+  }
+}
+
+void Tape::setNumberOfTapes(int tapes) {
+  symbols.resize(tapes);
+  head.resize(tapes);
+  for (size_t i = 0; i < symbols.size(); i++) {
+    head[i] = 0;
+  }
 }
 
 
-void Tape::moveRight(void) {
-  if (head == (int)(symbols.size() - 1)) {
-    symbols.push_back(".");
+void Tape::moveRight(int tape) {
+  if (head[tape] == (int)(symbols.size() - 1)) {
+    symbols[tape].push_back(".");
   }
-  ++head;
+  head[tape]++;
 }
 
-void Tape::moveLeft(void) {
-  if (head == 0) {
-    symbols.insert(symbols.begin(), ".");
+void Tape::moveLeft(int tape) {
+  if (head[tape] == 0) {
+    symbols[tape].insert(symbols[tape].begin(), ".");
   } else {
-    --head;
+    head[tape]--;
   }
 }
 
-std::string Tape::getSymbol(void) {
-  return symbols[head];
+std::string Tape::getSymbol(int tape) {
+  return symbols[tape][head[tape]];
 }
 
-int Tape::getCurrentSize(void) {
-  return symbols.size();
+std::vector<std::string> Tape::getAllPositionSymbols(void) {
+  std::vector<std::string> result;
+  for (size_t i = 0; i < symbols.size(); i++) 
+    result.push_back(symbols[i][head[i]]);
+  return result;
 }
 
-void Tape::writeSymbol(std::string symb) {
-  symbols[head] = symb;
+int Tape::getCurrentSize(int tape) {
+  return symbols[tape].size();
+}
+
+void Tape::writeSymbol(int tape, std::string symb) {
+  symbols[tape][head[tape]] = symb;
 }
 
 std::ostream& Tape::write(std::ostream &os) {
   os << ".";
-  for (size_t i = 0; i < symbols.size(); i++) {
-    if (i == head)
-      os << "|\033[4m" << symbols[i] << "\033[0m";
-    else
-      os << "|" << symbols[i];
+  for (size_t numberTape = 0; numberTape < symbols.size(); numberTape++) {
+    for (size_t i = 0; i < symbols[numberTape].size(); i++) {
+      if (i == head[numberTape])
+        os << "|\033[4m" << symbols[numberTape][i] << "\033[0m";
+      else
+        os << "|" << symbols[numberTape][i];
+    }
+    if (symbols[numberTape].size() == 1)
+      os << "|";
+    os << " - ";
   }
-  os << "  ";
   return os;
 }

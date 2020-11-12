@@ -45,6 +45,7 @@ TuringMachine::TuringMachine(char* turingFile) {
       if (line[0] != '#') break;
     }
     numberOfTapes = stoi(line);
+    turingTape.setNumberOfTapes(numberOfTapes);
     getline(file, line);  // leemos los estados
     getWords(line, words); 
     for (size_t i = 0; i < words.size(); i++) { // Almacenamos los estados
@@ -193,12 +194,14 @@ bool TuringMachine::isFinal(std::string state) {
 }
 
 bool TuringMachine::test(std::vector<std::string> stringsToTest) {
-  // turingTape.loadStrings(stringsToTest, whiteSymbol);
-  // currentState = initialState;
-  // writeCurrentMachine(std::cout);
+  turingTape.loadStrings(stringsToTest, whiteSymbol); 
+  currentState = initialState;
+  writeCurrentMachine(std::cout);
 
-  // while (!isFinal((*currentState).getID())) {
-  //   Transition nextTransition = (*currentState).getTransition(turingTape.getSymbol());
+ (*currentState).getTransition(turingTape.getAllPositionSymbols());
+ 
+  while (!isFinal((*currentState).getID())) {
+    // Transition nextTransition = (*currentState).getTransition(turingTape.getAllPositionSymbols());
   //   if (nextTransition.getInitialState() == " ")  // Si la transición está vacía, paramos la máquina
   //     return false;
   //   else {
@@ -212,7 +215,8 @@ bool TuringMachine::test(std::vector<std::string> stringsToTest) {
   //       turingTape.moveLeft();
   //     writeCurrentMachine(std::cout);
   //   }
-  // }
+  break;
+  }
   return true;
 }
 

@@ -28,7 +28,7 @@ class State {
   /* Metodo para añadirle una transición al autómata*/
   void pushTransition(Transition);
   /* Método que devuelve las transiciones posibles dado un símbolo de entrada y un símbolo de pila */
-  Transition getTransition(std::string stringSymbol);
+  Transition getTransition(std::vector<std::string> stringSymbol);
   /* Método de impresión del autómata */
   std::ostream& writeTransitions(std::ostream&) ;
 };
