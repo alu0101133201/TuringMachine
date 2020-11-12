@@ -25,13 +25,13 @@ void State::pushTransition(Transition newTransition) {
 }
 
 Transition State::getTransition(std::string stringSymbol) {
-  for (size_t i = 0; i < transitions.size(); i++) {
-    if ((transitions[i].getInitialState() == id) && (transitions[i].getReadSymbol() == stringSymbol))
-      return transitions[i];
-  }
-  std::string voidString(" ");
-  Transition voidTransition(voidString, voidString, voidString, voidString, voidString);
-  return voidTransition;
+  // for (size_t i = 0; i < transitions.size(); i++) {
+  //   if ((transitions[i].getInitialState() == id) && (transitions[i].getReadSymbol() == stringSymbol))
+  //     return transitions[i];
+  // }
+  // std::string voidString(" ");
+  // Transition voidTransition(voidString, voidString, voidString, voidString, voidString);
+  // return voidTransition;
 }
 
 std::ostream& State::writeTransitions(std::ostream& os) {

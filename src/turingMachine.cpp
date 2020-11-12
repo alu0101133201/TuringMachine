@@ -33,6 +33,7 @@ void getWords(std::string initialString, std::vector<std::string> &words) {
 }
 
 TuringMachine::TuringMachine(char* turingFile) {
+
   std::string route = "./examples/";
   std::string line;
   std::vector<std::string> words;
@@ -49,6 +50,7 @@ TuringMachine::TuringMachine(char* turingFile) {
     for (size_t i = 0; i < words.size(); i++) { // Almacenamos los estados
       allStates.push_back(*(new State(words[i])));
     }
+
     getline(file, line);  // Alfabeto de la máquina
     storeLine(line, words, turingAlphabet);
     getline(file, line);  // Alfabeto de la cinta
@@ -67,22 +69,8 @@ TuringMachine::TuringMachine(char* turingFile) {
     for (size_t i = 0; i < words.size(); i++) {
       finalStates.push_back(words[i]);
     }
-
-    while (getline(file, line)) {   // Leemos la transiciones
-      // getWords(line, words);
+    readTransitions(file);  // Leemos las transiciones
     
-      // if (!existState(words[0])) {  // compruebo que el estado de partida existe
-      //   std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
-      //   throw std::runtime_error(s);
-      // }
-      // for (size_t i = 0; i < allStates.size(); i++) { // Almaceno al transición en su estado correspondiente
-      //   if (allStates[i].getID() == words[0]) {
-      //     Transition aux(words[0], words[1], words[2], words[3], words[4]);
-      //     allStates[i].pushTransition(aux);
-      //   }
-      //   words.clear();
-      // }
-    }
     // if (!checkTuringMachine()) {  // Comprobamos que la máquina de turing sea válida
     //   std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
     //   throw std::runtime_error(s);
@@ -94,6 +82,50 @@ TuringMachine::TuringMachine(char* turingFile) {
 }
 
 TuringMachine::~TuringMachine() {}
+
+void TuringMachine::readTransitions(std::ifstream& file) {
+  std::string line;
+  std::vector<std::string> words;
+  std::string initialState;
+  std::string nextState;
+  std::vector<std::string> readSymbols;
+  std::vector<std::string> writeSymbols;
+  std::vector<std::string> moves;
+
+  while (getline(file, line)) {   // Leemos la transiciones
+    words.clear(); readSymbols.clear(); writeSymbols.clear(); moves.clear();
+    getWords(line, words);
+    int iter = 0;
+    initialState = words[iter];
+    iter++;
+    if (!existState(initialState)) {  // compruebo que el estado de partida existe
+      std::string s("ERROR EN TIEMPO DE EJECUCIÓN - El autómata no cumple con las restricciones formales\n");
+      throw std::runtime_error(s);
+    }
+    readTapeElements(words, iter, readSymbols);
+    nextState = words[iter];
+    iter++;
+    readTapeElements(words, iter, writeSymbols);
+    readTapeElements(words, iter, moves);
+
+    for (size_t i = 0; i < allStates.size(); i++) { // Almaceno al transición en su estado correspondiente
+      if (allStates[i].getID() == words[0]) {
+        Transition aux(initialState, readSymbols, nextState, writeSymbols, moves);
+        allStates[i].pushTransition(aux);
+      }
+    }
+  }
+}
+
+void TuringMachine::readTapeElements(std::vector<std::string> &source, 
+    int &iterator, std::vector<std::string> &destination) {
+  for (int i = 0; i < numberOfTapes; i++) { // Leemos los símbolos que leemos
+    destination.push_back(source[iterator]);
+    iterator++;
+  }
+}
+
+
 
 bool TuringMachine::checkTuringMachine() {
   bool findInitialState = false;
@@ -167,7 +199,7 @@ bool TuringMachine::test(std::vector<std::string> stringsToTest) {
   //     writeCurrentMachine(std::cout);
   //   }
   // }
-  // return true;
+  return true;
 }
 
 
@@ -185,13 +217,13 @@ std::ostream& TuringMachine::write (std::ostream& os) {
   os << "\n ·Estado inicial: " << (*initialState).getID() << "\n ·Estados finales: ";
   for (std::vector<std::string>::iterator it = finalStates.begin(); it != finalStates.end(); it++)
     os << *it << " ";
-  // os << "\nTransiciones: \n"; 
-  // for (size_t i = 0; i < allStates.size(); i++) { 
-  //   for (size_t j = 0; j < allStates[i].getTransitions().size(); j++) {
-  //     os << " ·";
-  //     allStates[i].getTransitions()[j].write(os);
-  //   }
-  // }
+  os << "\nTransiciones: \n"; 
+  for (size_t i = 0; i < allStates.size(); i++) { 
+    for (size_t j = 0; j < allStates[i].getTransitions().size(); j++) {
+      os << " ·";
+      allStates[i].getTransitions()[j].write(os);
+    }
+  }
   return os;
 }
 

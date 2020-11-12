@@ -43,5 +43,6 @@ std::ostream& Transition::write(std::ostream &os) {
     os << writeSymbol[i] << " ";
   for (size_t i = 0; i < move.size(); i++)
     os << move[i] << " ";
+  os << "\n";
   return os;
 }

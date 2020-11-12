@@ -37,6 +37,8 @@ class TuringMachine {
       bool existState(std::string state);
       bool isFinal(std::string state);
 
+      void readTransitions(std::ifstream& file);
+      void readTapeElements(std::vector<std::string> &source, int &iterator, std::vector<std::string> &destination);
   public:
     TuringMachine(char* turingFile);
     ~TuringMachine();

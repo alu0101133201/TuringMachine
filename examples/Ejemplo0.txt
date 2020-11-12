@@ -1,5 +1,6 @@
 # Ejemplo de una MT
 # Eliminar ceros de una cadena binaria
+2
 q0 q1 q2 q3
 0 1
 0 1 .

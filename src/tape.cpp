@@ -26,7 +26,7 @@ void Tape::loadStrings(std::vector<std::string> stringsToLoad, std::string white
 
 
 void Tape::moveRight(void) {
-  if (head == (symbols.size() - 1)) {
+  if (head == (int)(symbols.size() - 1)) {
     symbols.push_back(".");
   }
   ++head;
