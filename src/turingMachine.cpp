@@ -198,24 +198,18 @@ bool TuringMachine::test(std::vector<std::string> stringsToTest) {
   currentState = initialState;
   writeCurrentMachine(std::cout);
 
- (*currentState).getTransition(turingTape.getAllPositionSymbols());
- 
   while (!isFinal((*currentState).getID())) {
-    // Transition nextTransition = (*currentState).getTransition(turingTape.getAllPositionSymbols());
-  //   if (nextTransition.getInitialState() == " ")  // Si la transición está vacía, paramos la máquina
-  //     return false;
-  //   else {
-  //     for (size_t i = 0; i < allStates.size(); i++) // Actualizamos el estado
-  //       if (allStates[i].getID() == nextTransition.getNextState())
-  //         currentState = &allStates[i];
-  //     turingTape.writeSymbol(nextTransition.getWriteSymbol());  // Escribimos el símbolo correspondiente
-  //     if (nextTransition.getMove() == "R")  // Realizamos el movimiento del cabezal
-  //       turingTape.moveRight();
-  //     else if (nextTransition.getMove() == "L")
-  //       turingTape.moveLeft();
-  //     writeCurrentMachine(std::cout);
-  //   }
-  break;
+    Transition nextTransition = (*currentState).getTransition(turingTape.getAllPositionSymbols());
+    if (nextTransition.getInitialState() == " ")  // Si la transición está vacía, paramos la máquina
+      return false;
+    else {
+      for (size_t i = 0; i < allStates.size(); i++) // Actualizamos el estado
+        if (allStates[i].getID() == nextTransition.getNextState())
+          currentState = &allStates[i];
+      turingTape.writeNSymbols(nextTransition.getWriteSymbol());  // Escribimos los símbolos correspondiente
+      turingTape.NMoves(nextTransition.getMove());
+      writeCurrentMachine(std::cout);
+    }
   }
   return true;
 }

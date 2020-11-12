@@ -10,7 +10,5 @@ q2
 q0 1 . q0 . 1 R R
 q0 0 . q0 . . R S
 q0 . . q1 . . S L
-q1 . 1 q1 1 . R L
-q1 . . q2 . . L S
-q2 1 . q2 1 . L S
-q2 . . q3 . . R S
+q1 . 1 q1 1 . L L
+q1 . . q2 . . R S

@@ -24,6 +24,7 @@ class State {
 
   /* Getters*/
   std::string getID (void) const;
+  bool readSymbsInTransition(std::vector<std::string> readSymb, std::vector<std::string> transitionsSymb);
   std::vector<Transition> getTransitions();
   /* Metodo para añadirle una transición al autómata*/
   void pushTransition(Transition);

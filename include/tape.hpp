@@ -29,5 +29,7 @@ class Tape {
     int getCurrentSize(int tape);
     void writeSymbol(int tape, std::string symb);
 
+    void writeNSymbols(std::vector<std::string>);
+    void NMoves(std::vector<std::string>);
     std::ostream& write(std::ostream &os);
 };

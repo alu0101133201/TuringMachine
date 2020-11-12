@@ -39,7 +39,7 @@ void Tape::setNumberOfTapes(int tapes) {
 
 
 void Tape::moveRight(int tape) {
-  if (head[tape] == (int)(symbols.size() - 1)) {
+  if (head[tape] == (int)(symbols[tape].size() - 1)) {
     symbols[tape].push_back(".");
   }
   head[tape]++;
@@ -72,9 +72,24 @@ void Tape::writeSymbol(int tape, std::string symb) {
   symbols[tape][head[tape]] = symb;
 }
 
+void Tape::writeNSymbols(std::vector<std::string> toWrite) {
+  for (size_t i = 0; i < toWrite.size(); i++) {
+    writeSymbol(i, toWrite[i]);
+  }
+}
+void Tape::NMoves(std::vector<std::string> toMove) {
+  for (size_t i = 0; i < toMove.size(); i++) {
+      if (toMove[i] == "R")  // Realizamos el movimiento del cabezal
+        moveRight(i);
+      else if (toMove[i] == "L")
+        moveLeft(i);
+  }
+}
+
+
 std::ostream& Tape::write(std::ostream &os) {
-  os << ".";
   for (size_t numberTape = 0; numberTape < symbols.size(); numberTape++) {
+  os << ".";
     for (size_t i = 0; i < symbols[numberTape].size(); i++) {
       if (i == head[numberTape])
         os << "|\033[4m" << symbols[numberTape][i] << "\033[0m";
