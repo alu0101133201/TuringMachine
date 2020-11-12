@@ -47,6 +47,7 @@ void fileMode(TuringMachine turingMachine) {
 int main(int argc, char *argv[]) {
   if (argc < 2) {
     std::cerr << "Debe introducir el nombre del fichero que contiene al autómata\n";
+		std::cerr << "./main EjemploX.txt\n";
     return(1);
   } else {
       try {
